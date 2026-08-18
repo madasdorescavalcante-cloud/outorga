@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>OUTORGA — abra este arquivo</title>
+<style>
+:root {
+  --ink:#1c1410; --ink-soft:#5a4e43; --muted:#8a7b6b; --paper:#f4efe4; --paper-2:#e9e0d0;
+  --cream:#fffbf4; --forest:#16261c; --brass:#b08a3e; --brass-2:#d4bc7d; --seal:#9c2b1f;
+  --ok:#2d6a4f; --ok-soft:#dceee4; --warn:#9a5b12; --warn-soft:#f4e4c8; --info:#2c4a6e;
+  --info-soft:#dce6f2; --line:#d5c9b4;
+  --sans: "Segoe UI", system-ui, sans-serif;
+  --serif: Georgia, "Times New Roman", serif;
+}
+*{box-sizing:border-box} html,body{margin:0;padding:0}
+body{font-family:var(--sans);color:var(--ink);background:var(--paper);min-height:100vh;line-height:1.5}
+button,input,select,textarea{font:inherit;color:inherit} button{cursor:pointer}
+a{color:inherit} img{max-width:100%;display:block}
+.mark{display:inline-flex;align-items:center;gap:10px;text-decoration:none;letter-spacing:.22em;font-size:13px;font-weight:600;text-transform:uppercase}
+.mark-seal{width:34px;height:34px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#c44b3c,var(--seal) 55%,#6d160e);display:grid;place-items:center;color:#f8e7c2;font-family:var(--serif);font-weight:700;font-size:16px}
+.hero-page{min-height:100vh;background:linear-gradient(180deg,#102017 0%,var(--forest) 50%,#122018 100%);color:#f6f0e6}
+.nav{display:flex;justify-content:space-between;align-items:center;padding:18px 6vw}
+.hero{display:grid;grid-template-columns:1.1fr .9fr;gap:40px;padding:10px 6vw 70px;align-items:center}
+.kicker{color:var(--brass-2);letter-spacing:.28em;text-transform:uppercase;font-size:11px;font-weight:600;margin:0 0 14px}
+.hero h1{font-family:var(--serif);font-weight:600;font-size:clamp(34px,5vw,64px);line-height:.95;margin:0 0 16px}
+.hero h1 em{font-style:italic;color:var(--brass-2)}
+.lede{font-size:16px;max-width:520px;color:#d8d0c2;margin:0 0 22px}
+.steps-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:36px}
+.mini{border:1px solid rgba(212,188,125,.22);background:rgba(255,251,244,.04);padding:14px;border-radius:14px}
+.mini b{display:block;font-family:var(--serif);font-size:22px;color:var(--brass-2)}
+.mini span{font-size:13px;color:#cfc6b6}
+.auth-card{background:var(--cream);color:var(--ink);border-radius:24px;padding:26px;box-shadow:0 18px 50px rgba(0,0,0,.18);position:relative}
+.auth-card:before{content:"";position:absolute;inset:10px;border:1px solid var(--line);border-radius:16px;pointer-events:none}
+.auth-card h2{font-family:var(--serif);font-size:32px;margin:0 0 6px}
+.hint{margin:0 0 16px;color:var(--ink-soft);font-size:14px}
+.tabs{display:flex;gap:6px;margin-bottom:14px}
+.tab{border:0;background:transparent;padding:8px 12px;color:var(--muted);border-bottom:2px solid transparent}
+.tab.on{color:var(--ink);border-color:var(--brass)}
+.demo{margin-top:12px;background:#f4efe4;border-radius:12px;padding:10px 12px;font-size:12.5px;color:var(--ink-soft)}
+.demo code{font-family:ui-monospace,Menlo,monospace;background:#fff;padding:1px 6px;border-radius:6px}
+.topbar{position:sticky;top:0;z-index:20;display:flex;justify-content:space-between;align-items:center;padding:12px 22px;background:var(--forest);color:#f6f0e6;gap:10px;flex-wrap:wrap}
+.top-nav{display:flex;gap:4px;flex-wrap:wrap}
+.top-nav a{text-decoration:none;color:#e8dfd0;padding:8px 12px;border-radius:999px;font-size:13.5px}
+.top-nav a.on,.top-nav a:hover{background:rgba(255,255,255,.08);color:#fff}
+.user-pill{display:flex;align-items:center;gap:10px;font-size:13px}
+.avatar{width:34px;height:34px;border-radius:50%;background:var(--brass);color:var(--forest);display:grid;place-items:center;font-weight:700}
+.wrap{width:min(1100px,calc(100% - 32px));margin:24px auto 80px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:999px;padding:12px 18px;font-weight:600;text-decoration:none}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn-brass{background:var(--brass-2);color:var(--forest)}
+.btn-forest{background:var(--forest);color:#f6f0e6}
+.btn-ghost{background:transparent;color:#f6f0e6;border:1px solid rgba(246,240,230,.28)}
+.btn-line{background:transparent;border:1px solid var(--line);color:var(--ink)}
+.btn-ok{background:var(--ok);color:#fff}
+.btn-block{width:100%} .btn-sm{padding:8px 12px;font-size:13px}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.field{display:flex;flex-direction:column;gap:6px;margin-bottom:12px}
+.field.full{grid-column:1/-1}
+.field label{font-size:12px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--ink-soft)}
+.field input,.field select,.field textarea{background:var(--cream);border:1px solid var(--line);border-radius:12px;padding:11px 12px;outline:none}
+.field textarea{min-height:80px;resize:vertical}
+.err{background:#f8e4e1;color:var(--seal);border-radius:10px;padding:10px 12px;font-size:13.5px;margin:8px 0 12px;display:none}
+.err.show{display:block}
+.page-head{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;margin-bottom:20px;flex-wrap:wrap}
+.page-head h1{font-family:var(--serif);font-size:40px;margin:0;font-weight:600;line-height:1}
+.page-head p{margin:8px 0 0;color:var(--ink-soft)}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
+.stat{background:var(--cream);border:1px solid var(--line);border-radius:18px;padding:16px}
+.stat b{display:block;font-family:var(--serif);font-size:32px;line-height:1}
+.stat span{color:var(--muted);font-size:13px}
+.search{flex:1;background:var(--cream);border:1px solid var(--line);border-radius:999px;padding:10px 16px}
+.toolbar{display:flex;gap:10px;margin-bottom:14px}
+.list{display:flex;flex-direction:column;gap:10px}
+.row-card{display:grid;grid-template-columns:1.3fr .7fr .7fr .6fr auto;gap:12px;align-items:center;background:var(--cream);border:1px solid var(--line);border-radius:16px;padding:14px 16px;cursor:pointer}
+.row-card:hover{border-color:var(--brass)}
+.who{font-weight:600} .meta{color:var(--muted);font-size:13px}
+.placa{font-family:ui-monospace,Menlo,monospace;letter-spacing:.08em;font-weight:700}
+.badge{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:4px 10px;font-size:12px;font-weight:600}
+.badge:before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor}
+.b-wait{background:var(--warn-soft);color:var(--warn)} .b-run{background:var(--info-soft);color:var(--info)}
+.b-ok{background:var(--ok-soft);color:var(--ok)} .b-off{background:#ece7de;color:#6b6256}
+.paper-card{background:var(--cream);border:1px solid var(--line);border-radius:22px;padding:24px}
+.section-title{font-family:var(--serif);font-size:26px;margin:0 0 4px}
+.section-sub{color:var(--ink-soft);margin:0 0 16px;font-size:14px}
+.hr{height:1px;background:var(--line);margin:20px 0;border:0}
+.poderes{display:grid;gap:8px}
+.poder{display:grid;grid-template-columns:22px 1fr;gap:10px;padding:12px;border:1px solid var(--line);border-radius:14px;background:#fffdf8;cursor:pointer}
+.poder small{color:var(--ink-soft);font-size:12.5px}
+.detail-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:16px}
+.kv{display:grid;grid-template-columns:130px 1fr;gap:6px 10px;font-size:14px}
+.kv b{color:var(--muted);font-weight:500}
+.thumbs{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.thumbs figure{margin:0;background:#fff;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.thumbs img{width:100%;height:140px;object-fit:cover;background:#eee}
+.thumbs figcaption{font-size:11px;padding:6px 8px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.client-body{background:#0e1712;color:#f6f0e6;min-height:100vh}
+.client-shell{width:min(560px,100%);margin:0 auto;min-height:100vh;padding-bottom:32px}
+.client-top{display:flex;justify-content:space-between;align-items:center;padding:16px 18px 8px}
+.step-count{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--brass-2)}
+.client-main{padding:8px 18px}
+.client-main h1{font-family:var(--serif);font-size:34px;line-height:1;margin:8px 0 10px}
+.lead{color:#d5cbb8;margin:0 0 16px}
+.glass{background:rgba(255,251,244,.05);border:1px solid rgba(212,188,125,.18);border-radius:18px;padding:16px;margin-bottom:10px}
+.glass h3{margin:0 0 8px;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--brass-2)}
+.fact{display:flex;justify-content:space-between;gap:12px;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.06);font-size:14px}
+.fact:last-child{border-bottom:0} .fact span{color:#b7ad9c}
+.poder-chip{display:block;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.06);font-size:14px}
+.drop{border:1px dashed rgba(212,188,125,.5);border-radius:16px;padding:22px;text-align:center;background:rgba(0,0,0,.2)}
+.preview-img{width:100%;border-radius:16px;max-height:280px;object-fit:contain;background:#111}
+.sign-wrap{background:#fff;border-radius:16px;overflow:hidden}
+.sign-wrap canvas{width:100%;height:200px;touch-action:none;display:block;cursor:crosshair}
+.legal{font-size:13px;color:#d5cbb8;display:grid;grid-template-columns:20px 1fr;gap:10px;margin:14px 0}
+.success-mark{width:86px;height:86px;border-radius:50%;margin:24px auto 12px;background:var(--ok);display:grid;place-items:center}
+.progress-steps{display:flex;gap:8px;padding:0 18px;margin-bottom:10px}
+.progress-steps span{flex:1;height:4px;border-radius:99px;background:#2a3a30}
+.progress-steps span.on{background:var(--brass-2)} .progress-steps span.done{background:var(--ok)}
+.doc-sheet{background:#fff;color:#1c1410;padding:28px 26px;border-radius:4px;box-shadow:0 12px 30px rgba(0,0,0,.08);font-family:var(--serif)}
+.doc-sheet h2{text-align:center;letter-spacing:.04em;margin:0 0 4px;font-size:20px}
+.doc-sheet .sub{text-align:center;color:#7a6d5c;font-style:italic;margin:0 0 16px}
+.doc-sheet p{text-align:justify;font-size:15px;line-height:1.45}
+.toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%) translateY(16px);background:var(--forest);color:#fff;padding:10px 16px;border-radius:999px;opacity:0;transition:.25s;z-index:50}
+.toast.show{opacity:1;transform:translateX(-50%)}
+.banner{background:#d4bc7d;color:#16261c;padding:10px 16px;text-align:center;font-size:13.5px;font-weight:600}
+.warnbar{background:#9c2b1f;color:#fff8ee;padding:10px 16px;text-align:center;font-size:13.5px;font-weight:600}
+.okbar{background:#2d6a4f;color:#fff;padding:10px 16px;text-align:center;font-size:13.5px}
+.packs{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 12px}
+.pack{border:1px solid var(--line);background:#fff;border-radius:999px;padding:8px 14px;font-size:13px}
+.pack.on{border-color:var(--forest);background:var(--forest);color:#fff}
+.pinbox{font-family:ui-monospace,Menlo,monospace;font-size:28px;letter-spacing:.35em;background:#fff;border:1px dashed var(--brass);border-radius:12px;padding:10px 14px;display:inline-block}
+.timeline{list-style:none;padding:0;margin:0}
+.timeline li{display:grid;grid-template-columns:14px 1fr;gap:10px;padding:6px 0;font-size:13.5px}
+.timeline i{width:10px;height:10px;border-radius:50%;background:var(--line);margin-top:5px;display:block}
+.timeline li.done i{background:var(--ok)}
+.meter{height:6px;background:var(--paper-2);border-radius:99px;overflow:hidden;margin-top:6px}
+.meter span{display:block;height:100%;width:0;background:#c44}
+.link-box{display:flex;gap:8px;align-items:center;background:#fffdf8;border:1px dashed #b08a3e;border-radius:12px;padding:8px 8px 8px 12px;margin:10px 0}
+.link-box input{flex:1;border:0;background:transparent;outline:none;font-size:13px;min-width:0;color:#1c1410}
+@media(max-width:900px){
+  .hero,.detail-grid,.row-card,.stats,.grid-3{grid-template-columns:1fr}
+  .grid-2{grid-template-columns:1fr}
+  .steps-row{grid-template-columns:1fr}
+}
+@media print{
+  .topbar,.banner,.no-print{display:none!important}
+  body{background:#fff}
+  .wrap{width:auto;margin:0}
+}
+</style>
+</head>
+<body>
+<div id="topmsg" class="banner">OUTORGA — se esta faixa apareceu, o arquivo abriu. A tela de login vem logo abaixo.</div>
+<div id="app">
+  <div class="hero-page">
+    <header class="nav"><div class="mark"><div class="mark-seal">O</div><span>Outorga</span></div></header>
+    <section class="hero">
+      <div>
+        <p class="kicker">Despachante documentalista</p>
+        <h1>A procuração chega pronta.<br><em>O cliente só assina.</em></h1>
+        <p class="lede">Você preenche veículo, poderes e dados. O cliente envia a CNH, faz a prova de vida e assina. O PDF volta para imprimir.</p>
+      </div>
+      <aside class="auth-card">
+        <h2>Escritório</h2>
+        <p class="hint">Entre para emitir procurações.</p>
+        <form id="bootLogin">
+          <div class="field"><label>E-mail</label><input name="email" value="despachante@outorga.app" required></div>
+          <div class="field"><label>Senha</label><input name="password" type="password" value="123456" required></div>
+          <button class="btn btn-forest btn-block" type="submit">Entrar no painel</button>
+        </form>
+        <div class="demo">Primeiro acesso: <code>despachante@outorga.app</code> · <code>123456</code>. Depois troque a senha.</div>
+      </aside>
+    </section>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+<script>
+const PODERES = [
+  {id:"representar",titulo:"Representação junto aos órgãos de trânsito",texto:"Representar o outorgante junto ao DETRAN, SENATRAN, CIRETRAN, cartórios e demais órgãos, protocolando e assinando requerimentos."},
+  {id:"licenciamento",titulo:"Licenciamento anual e emissão de CRLV-e",texto:"Requerer o licenciamento anual e emitir o CRLV-e."},
+  {id:"transferencia",titulo:"Transferência de propriedade (CRV / ATPV-e)",texto:"Assinar CRV e ATPV-e, transmitir domínio, inclusive para si ou terceiros."},
+  {id:"emplacamento",titulo:"Primeiro emplacamento",texto:"Solicitar o primeiro emplacamento e documentos iniciais."},
+  {id:"segunda_via",titulo:"2ª via de CRV, CRLV e demais documentos",texto:"Requerer e retirar vias de documentos do veículo."},
+  {id:"vistoria",titulo:"Vistoria veicular",texto:"Agendar, autorizar e acompanhar vistorias."},
+  {id:"alteracao",titulo:"Alteração de dados e características",texto:"Alterar dados cadastrais, cor, combustível e categoria."},
+  {id:"gravame",titulo:"Baixa de gravame e alienação fiduciária",texto:"Requerer baixa de gravame, desalienação e desbloqueio."},
+  {id:"debitos",titulo:"Regularização de débitos (IPVA, taxas e multas)",texto:"Consultar, parcelar e quitar débitos do veículo."},
+  {id:"recursos",titulo:"Defesa e recurso de multas",texto:"Apresentar defesa e recurso em processos de trânsito."},
+  {id:"apreensao",titulo:"Liberação de veículo apreendido",texto:"Retirar o veículo de pátio ou depósito."},
+  {id:"baixa",titulo:"Baixa definitiva / comunicação de venda",texto:"Requerer baixa definitiva e comunicação de venda."},
+  {id:"bloqueios",titulo:"Retirada de bloqueios e restrições",texto:"Requerer desbloqueio e baixa de restrições."},
+  {id:"declaracoes",titulo:"Declarações, termos e residência",texto:"Assinar termos, declarações e nada-consta."}
+];
+const PMAP = Object.fromEntries(PODERES.map(p=>[p.id,p]));
+const PACOTES = {
+  regular:["representar","licenciamento","segunda_via","vistoria","debitos","declaracoes"],
+  transferir:["representar","transferencia","vistoria","segunda_via","declaracoes","gravame"],
+  completo: PODERES.map(p=>p.id)
+};
+const $ = (s,r=document)=>r.querySelector(s);
+const $$ = (s,r=document)=>[...r.querySelectorAll(s)];
+
+const KEY = "outorga.standalone.v1";
+let MEM = null;
+let DB = null;
+function lsGet(){
+  try { return localStorage.getItem(KEY); } catch(e) { return MEM; }
+}
+function lsSet(val){
+  try { localStorage.setItem(KEY, val); } catch(e) { MEM = val; }
+}
+function load(){
+  let data = null;
+  try {
+    const raw = lsGet();
+    if (raw) data = JSON.parse(raw);
+  } catch (e) {}
+  if (!data) data = seed();
+  migrate(data);
+  lsSet(JSON.stringify(data));
+  return data;
+}
+function migrate(data){
+  data.lockouts ||= {};
+  (data.users||[]).forEach(u=>{
+    if(u.password === "demo123") u.password = "123456";
+    if(u.mustChangePassword === undefined) u.mustChangePassword = (u.password === "123456");
+    u.fails ||= 0;
+  });
+  const lista = (data.procuracoes||[]).slice().sort((a,b)=>new Date(a.createdAt)-new Date(b.createdAt));
+  lista.forEach((p,i)=>{
+    if(!p.pin) p.pin = genPin();
+    if(!p.codigo || /OUT-[0-9A-F]{4}-[0-9A-F]{4}/i.test(p.codigo) || p.codigo==="OUT-3935-660D")
+      p.codigo = "OUT-" + String(i+1).padStart(5,"0");
+    p.historico ||= [{em:p.createdAt, fato:"Mandato criado"}];
+    if(p.signedAt && !p.historico.some(h=>h.fato==="Assinado pelo cliente"))
+      p.historico.push({em:p.signedAt, fato:"Assinado pelo cliente"});
+  });
+}
+function save(d){ DB = d; lsSet(JSON.stringify(d)); }
+function uid(){ return Math.random().toString(36).slice(2,10)+Date.now().toString(36).slice(-4); }
+function codigo(){
+  const n = DB.procuracoes.reduce((m,p)=>{
+    const k = parseInt(String(p.codigo||"").replace(/\D/g,""),10);
+    return Number.isFinite(k) && k>m ? k : m;
+  },0)+1;
+  return "OUT-" + String(n).padStart(5,"0");
+}
+function genPin(){ return String(Math.floor(1000 + Math.random()*9000)); }
+function seed(){
+  return {
+    session: null,
+    lockouts: {},
+    users: [{
+      id:"u1", email:"despachante@outorga.app", password:"123456",
+      mustChangePassword:true,
+      nome:"Carlos Henrique Mendes", cpf:"084.219.763-50", rg:"2.104.883 SSP/CE",
+      nacionalidade:"brasileiro", estadoCivil:"casado", profissao:"Despachante documentalista",
+      empresa:"Mendes Documentos", registro:"SINDETRAN-CE 1847", telefone:"(88) 98812-4400",
+      cep:"63010-010", endereco:"Rua São Pedro", numero:"520", bairro:"Centro",
+      cidade:"Juazeiro do Norte", uf:"CE"
+    }],
+    procuracoes: [{
+      id:"p1", userId:"u1", token:"demo-maria", codigo:"OUT-00001",
+      status:"assinada", createdAt:new Date().toISOString(), signedAt:new Date().toISOString(),
+      validadeDias:365, substabelecer:false, whatsapp:"(88) 99999-1122",
+      observacoes:"Somente regularização e licenciamento.",
+      cliente:{nome:"Maria Aparecida da Silva",cpf:"529.982.247-25",rg:"2001456",orgaoRg:"SSP/CE",
+        nacionalidade:"brasileira",estadoCivil:"casada",profissao:"professora",telefone:"(88) 99999-1122",
+        cep:"63010-000",endereco:"Rua do Cruzeiro",numero:"100",bairro:"Centro",cidade:"Juazeiro do Norte",uf:"CE"},
+      veiculo:{placa:"RTA2B18",renavam:"01234567890",chassi:"9BWZZZ377VT004251",marca:"Volkswagen",modelo:"Gol 1.0",
+        especie:"Automóvel",anoFab:"2018",anoMod:"2019",cor:"Prata",combustivel:"Flex"},
+      pin:"4821",
+      poderes:["representar","licenciamento","segunda_via","vistoria","debitos"],
+      evidencias:{documento:null,biometria:null,assinatura:null,documentoTipo:"CNH",liveness:"Prova de vida concluída",biometriaScore:87},
+      historico:[{em:new Date().toISOString(),fato:"Mandato criado"},{em:new Date().toISOString(),fato:"Assinado pelo cliente"}]
+    }]
+  };
+}
+DB = load();
+let route = {name:"home", params:{}};
+let clientStep = 0;
+let clientDraft = {};
+
+function shareLink(p){
+  const base = String(location.href||"").split("#")[0];
+  return base + "#assinar/" + p.id;
+}
+function waMsg(p){
+  const nome = (p.cliente.nome||"").split(" ")[0];
+  return `Olá, ${nome}! Sou o despachante do veículo ${p.veiculo.placa}. Para assinar a procuração, abra este link: ${shareLink(p)}`;
+}
+function go(name, params={}){
+  route = {name, params};
+  clientStep = 0;
+  clientDraft = {};
+  if(name==="assinar" && params.id) location.hash = "assinar/"+params.id;
+  else if(name==="home") location.hash = "";
+  render();
+  window.scrollTo(0,0);
+}
+function toast(m){ const t=$("#toast"); if(!t) return; t.textContent=m; t.classList.add("show"); setTimeout(()=>t.classList.remove("show"),2400); }
+function strongPass(s){
+  s=String(s||"");
+  if(s.length<8) return "Use ao menos 8 caracteres";
+  if(!/[A-Za-z]/.test(s) || !/\d/.test(s)) return "Misture letras e números";
+  if(s==="demo123" || s==="123456" || s==="12345678") return "Essa senha é pública demais";
+  return "";
+}
+function validadeFim(p){
+  const d=new Date(p.signedAt||p.createdAt);
+  d.setDate(d.getDate()+Number(p.validadeDias||0));
+  return d;
+}
+function diasRestantes(p){
+  return Math.ceil((validadeFim(p)-Date.now())/86400000);
+}
+function pushHist(p,fato){
+  p.historico ||= [];
+  p.historico.push({em:new Date().toISOString(), fato});
+}
+function updateTopmsg(){
+  const el=$("#topmsg"); if(!el) return;
+  const u=me();
+  if(!u){ el.className="banner"; el.textContent="OUTORGA aberto. Entre com despachante@outorga.app / 123456 e troque a senha."; return; }
+  if(u.mustChangePassword){ el.className="warnbar"; el.textContent="Troque a senha em Meus dados — a senha padrão é pública."; return; }
+  el.className="okbar"; el.textContent=(u.empresa||"Escritório")+" · sessão com senha própria";
+}
+function only(s){ return String(s||"").replace(/\D/g,""); }
+function maskCPF(v){ v=only(v).slice(0,11); return v.replace(/(\d{3})(\d)/,"$1.$2").replace(/(\d{3})(\d)/,"$1.$2").replace(/(\d{3})(\d{1,2})$/,"$1-$2"); }
+function maskPhone(v){ v=only(v).slice(0,11); if(v.length<=10) return v.replace(/(\d{2})(\d{4})(\d{0,4})/,"($1) $2-$3").replace(/-$/,""); return v.replace(/(\d{2})(\d{5})(\d{0,4})/,"($1) $2-$3").replace(/-$/,""); }
+function maskPlate(v){ return String(v||"").toUpperCase().replace(/[^A-Z0-9]/g,"").slice(0,7); }
+function validCPF(cpf){
+  const s=only(cpf); if(s.length!==11||/^(\d)\1+$/.test(s)) return false;
+  let sum=0; for(let i=0;i<9;i++) sum+=+s[i]*(10-i); let d=(sum*10)%11; if(d===10)d=0; if(d!==+s[9]) return false;
+  sum=0; for(let i=0;i<10;i++) sum+=+s[i]*(11-i); d=(sum*10)%11; if(d===10)d=0; return d===+s[10];
+}
+function fmt(iso){ if(!iso) return "—"; return new Date(iso).toLocaleString("pt-BR",{day:"2-digit",month:"2-digit",year:"numeric",hour:"2-digit",minute:"2-digit"}); }
+function badge(st){
+  const m={aguardando:["b-wait","Aguardando assinatura"],em_andamento:["b-run","Em andamento"],assinada:["b-ok","Assinada"],cancelada:["b-off","Cancelada"]};
+  const [c,l]=m[st]||["b-off",st]; return `<span class="badge ${c}">${l}</span>`;
+}
+function initials(n){ return String(n||"?").split(/\s+/).filter(Boolean).slice(0,2).map(p=>p[0]).join("").toUpperCase(); }
+function me(){ return DB.users.find(u=>u.id===DB.session); }
+function myProcs(){ return DB.procuracoes.filter(p=>p.userId===DB.session).sort((a,b)=>new Date(b.createdAt)-new Date(a.createdAt)); }
+function topbar(cur){
+  const u=me();
+  return `<header class="topbar">
+    <a class="mark" href="#" data-go="painel"><div class="mark-seal">O</div><span>Outorga</span></a>
+    <nav class="top-nav">
+      <a href="#" data-go="painel" class="${cur==="painel"?"on":""}">Painel</a>
+      <a href="#" data-go="nova" class="${cur==="nova"?"on":""}">Nova procuração</a>
+      <a href="#" data-go="conta" class="${cur==="conta"?"on":""}">Meus dados</a>
+    </nav>
+    <div class="user-pill"><div><div style="font-weight:600">${u.nome.split(" ")[0]}</div><div style="opacity:.7;font-size:12px">${u.empresa||"Despachante"}</div></div><div class="avatar">${initials(u.nome)}</div></div>
+  </header>`;
+}
+
+function viewHome(){
+  return `<div class="hero-page">
+    <header class="nav"><a class="mark"><div class="mark-seal">O</div><span>Outorga</span></a></header>
+    <section class="hero">
+      <div>
+        <p class="kicker">Despachante documentalista</p>
+        <h1>A procuração chega pronta.<br><em>O cliente só assina.</em></h1>
+        <p class="lede">Você preenche veículo, poderes e dados. O cliente abre o link, envia a CNH, faz a prova de vida e assina. O PDF volta para imprimir.</p>
+        <div class="steps-row">
+          <div class="mini"><b>01</b><span>Despachante monta o mandato.</span></div>
+          <div class="mini"><b>02</b><span>Cliente envia documento, biometria e assinatura.</span></div>
+          <div class="mini"><b>03</b><span>Confirmação no painel e impressão.</span></div>
+        </div>
+      </div>
+      <aside class="auth-card">
+        <h2>Escritório</h2>
+        <p class="hint">Acesse para emitir procurações.</p>
+        <div class="tabs">
+          <button class="tab on" type="button" id="tabL">Entrar</button>
+          <button class="tab" type="button" id="tabR">Criar conta</button>
+        </div>
+        <form id="formL">
+          <div class="field"><label>E-mail</label><input name="email" autocomplete="username" value="despachante@outorga.app" required></div>
+          <div class="field"><label>Senha</label><input name="password" type="password" autocomplete="current-password" value="123456" required></div>
+          <div class="err" id="errL"></div>
+          <button class="btn btn-forest btn-block" type="submit">Entrar no painel</button>
+        </form>
+        <form id="formR" hidden>
+          <div class="field"><label>Nome</label><input name="nome" required></div>
+          <div class="field"><label>Empresa</label><input name="empresa"></div>
+          <div class="field"><label>E-mail</label><input name="email" type="email" required></div>
+          <div class="field"><label>Senha</label><input name="password" type="password" minlength="8" required placeholder="mín. 8, letras e números"></div>
+          <div class="err" id="errR"></div>
+          <button class="btn btn-forest btn-block" type="submit">Criar escritório</button>
+        </form>
+        <div class="demo">Primeiro acesso: e-mail <code>despachante@outorga.app</code>, senha <code>123456</code>. Troque em seguida.</div>
+      </aside>
+    </section>
+  </div>`;
+}
+function bindHome(){
+  $("#tabL").onclick=()=>{ $("#tabL").classList.add("on"); $("#tabR").classList.remove("on"); $("#formL").hidden=false; $("#formR").hidden=true; };
+  $("#tabR").onclick=()=>{ $("#tabR").classList.add("on"); $("#tabL").classList.remove("on"); $("#formR").hidden=false; $("#formL").hidden=true; };
+  $("#formL").onsubmit=e=>{
+    e.preventDefault();
+    const fd=new FormData(e.target);
+    if(!doLogin(fd.get("email"), fd.get("password"))){ $("#errL").textContent="E-mail ou senha inválidos"; $("#errL").classList.add("show"); }
+  };
+  $("#formR").onsubmit=e=>{
+    e.preventDefault();
+    const fd=new FormData(e.target);
+    if(DB.users.some(x=>x.email===String(fd.get("email")).toLowerCase())){ $("#errR").textContent="E-mail já cadastrado"; $("#errR").classList.add("show"); return; }
+    const u={id:uid(), email:String(fd.get("email")).toLowerCase(), password:fd.get("password"), nome:fd.get("nome"), empresa:fd.get("empresa")||"", cpf:"", rg:"", nacionalidade:"brasileiro(a)", estadoCivil:"", profissao:"Despachante documentalista", registro:"", telefone:"", cep:"", endereco:"", numero:"", bairro:"", cidade:"", uf:""};
+    DB.users.push(u); DB.session=u.id; save(DB); go("conta");
+  };
+}
+
+function viewPainel(){
+  const list=myProcs();
+  const wait=list.filter(p=>p.status==="aguardando"||p.status==="em_andamento").length;
+  const ok=list.filter(p=>p.status==="assinada").length;
+  const venc=list.filter(p=>p.status==="assinada" && diasRestantes(p)<=30).length;
+  return `${topbar("painel")}<main class="wrap">
+    <div class="page-head"><div><h1>Mandatos</h1><p>Acompanhe o que o cliente já assinou.</p></div>
+      <button class="btn btn-forest" data-go="nova">Nova procuração</button></div>
+    <div class="stats">
+      <div class="stat"><b>${list.length}</b><span>Emitidas</span></div>
+      <div class="stat"><b>${wait}</b><span>Aguardando</span></div>
+      <div class="stat"><b>${ok}</b><span>Assinadas</span></div>
+      <div class="stat"><b>${venc}</b><span>Vencendo em 30 dias</span></div>
+    </div>
+    <div class="toolbar"><input class="search" id="q" placeholder="Buscar por nome, CPF ou placa"></div>
+    <div class="list" id="lista">${rows(list)}</div>
+  </main>`;
+}
+function rows(list){
+  if(!list.length) return `<div class="paper-card" style="text-align:center"><h3 class="section-title">Nenhuma procuração</h3><p>Monte o primeiro mandato.</p><button class="btn btn-forest" data-go="nova">Emitir agora</button></div>`;
+  return list.map(p=>{
+    const d=p.status==="assinada"?diasRestantes(p):null;
+    const venc=d!=null && d<=30 ? `<div class="meta" style="color:${d<0?"#9c2b1f":"#9a5b12"}">${d<0?"Vencida":"Vence em "+d+" dias"}</div>` : "";
+    return `<div class="row-card" data-open="${p.id}">
+    <div><div class="who">${p.cliente.nome}</div><div class="meta">${p.cliente.cpf} · ${p.codigo}</div></div>
+    <div><div class="placa">${p.veiculo.placa}</div><div class="meta">${[p.veiculo.marca,p.veiculo.modelo].filter(Boolean).join(" ")}</div></div>
+    <div class="meta">${fmt(p.signedAt||p.createdAt)}${venc}</div>
+    <div>${badge(p.status)}</div>
+    <div class="meta">${p.poderes.length} poder(es)</div>
+  </div>`;
+  }).join("");
+}
+function bindPainel(){
+  $("#q").oninput=()=>{
+    const q=$("#q").value.toLowerCase();
+    const list=myProcs().filter(p=>`${p.cliente.nome} ${p.cliente.cpf} ${p.veiculo.placa} ${p.codigo}`.toLowerCase().includes(q));
+    $("#lista").innerHTML=rows(list);
+    bindClicks();
+  };
+}
+
+function viewNova(){
+  return `${topbar("nova")}<main class="wrap" style="max-width:860px"><div class="page-head"><div><h1>Novo mandato</h1><p>O cliente só vai revisar, enviar documento e assinar.</p></div></div>
+  <form class="paper-card" id="formN">
+    <h2 class="section-title">1. Outorgante</h2>
+    <div class="grid-2">
+      <div class="field full"><label>Nome completo</label><input name="nome" required></div>
+      <div class="field"><label>CPF</label><input name="cpf" id="cpf" required></div>
+      <div class="field"><label>RG</label><input name="rg"></div>
+      <div class="field"><label>WhatsApp</label><input name="whatsapp" id="phone"></div>
+      <div class="field"><label>Cidade</label><input name="cidade" value="Juazeiro do Norte"></div>
+      <div class="field"><label>UF</label><input name="uf" maxlength="2" value="CE"></div>
+      <div class="field full"><label>Endereço</label><input name="endereco"></div>
+    </div>
+    <hr class="hr"><h2 class="section-title">2. Veículo</h2>
+    <div class="grid-3">
+      <div class="field"><label>Placa</label><input name="placa" id="placa" required placeholder="ABC1D23"></div>
+      <div class="field"><label>RENAVAM</label><input name="renavam"></div>
+      <div class="field"><label>Chassi</label><input name="chassi"></div>
+      <div class="field"><label>Marca</label><input name="marca"></div>
+      <div class="field"><label>Modelo</label><input name="modelo"></div>
+      <div class="field"><label>Cor</label><input name="cor"></div>
+      <div class="field"><label>Ano fab.</label><input name="anoFab"></div>
+      <div class="field"><label>Combustível</label><select name="combustivel"><option></option><option>Flex</option><option>Gasolina</option><option>Diesel</option><option>Elétrico</option></select></div>
+    </div>
+    <hr class="hr"><h2 class="section-title">3. Poderes</h2>
+    <p class="section-sub">Comece por um pacote e ajuste.</p>
+    <div class="packs">
+      <button type="button" class="pack on" data-pack="regular">Só regularizar</button>
+      <button type="button" class="pack" data-pack="transferir">Transferência</button>
+      <button type="button" class="pack" data-pack="completo">Completo</button>
+    </div>
+    <div style="margin-bottom:10px;display:flex;gap:8px">
+      <button type="button" class="btn btn-line btn-sm" id="all">Marcar todos</button>
+      <button type="button" class="btn btn-line btn-sm" id="none">Limpar</button>
+    </div>
+    <div class="poderes">${PODERES.map(p=>`<label class="poder"><input type="checkbox" name="poder" value="${p.id}" ${PACOTES.regular.includes(p.id)?"checked":""}><div><strong>${p.titulo}</strong><small>${p.texto}</small></div></label>`).join("")}</div>
+    <hr class="hr"><h2 class="section-title">4. Validade e PIN</h2>
+    <div class="grid-2">
+      <div class="field"><label>Prazo</label><select name="validadeDias"><option value="90">90 dias</option><option value="180">180 dias</option><option value="365" selected>1 ano</option><option value="1095">3 anos</option></select></div>
+      <div class="field"><label>PIN de 4 dígitos</label><input name="pin" id="pin" maxlength="4" inputmode="numeric" value="${genPin()}"></div>
+      <div class="field" style="justify-content:flex-end"><label style="text-transform:none;letter-spacing:0;font-weight:500;display:flex;gap:8px;align-items:center"><input type="checkbox" name="sub"> Autorizar substabelecimento</label></div>
+      <div class="field full"><label>Observações</label><textarea name="obs"></textarea></div>
+    </div>
+    <div class="err" id="errN"></div>
+    <button class="btn btn-forest" type="submit">Gerar e abrir o link do cliente</button>
+  </form></main>`;
+}
+function bindNova(){
+  $("#cpf").oninput=e=>e.target.value=maskCPF(e.target.value);
+  $("#phone").oninput=e=>e.target.value=maskPhone(e.target.value);
+  $("#placa").oninput=e=>e.target.value=maskPlate(e.target.value);
+  $("#all").onclick=()=>$$("input[name=poder]").forEach(i=>i.checked=true);
+  $("#none").onclick=()=>$$("input[name=poder]").forEach(i=>i.checked=false);
+  $$("[data-pack]").forEach(btn=>btn.onclick=()=>{
+    $$("[data-pack]").forEach(b=>b.classList.remove("on"));
+    btn.classList.add("on");
+    const ids=PACOTES[btn.dataset.pack]||[];
+    $$("input[name=poder]").forEach(i=>i.checked=ids.includes(i.value));
+  });
+  $("#pin").oninput=e=>e.target.value=only(e.target.value).slice(0,4);
+  $("#formN").onsubmit=e=>{
+    e.preventDefault();
+    const fd=new FormData(e.target);
+    if(!validCPF(fd.get("cpf"))){ $("#errN").textContent="CPF inválido"; $("#errN").classList.add("show"); return; }
+    const poderes=$$("input[name=poder]:checked").map(i=>i.value);
+    if(!poderes.length){ $("#errN").textContent="Selecione ao menos um poder"; $("#errN").classList.add("show"); return; }
+    const pin=only(fd.get("pin"));
+    if(pin.length!==4){ $("#errN").textContent="PIN deve ter 4 dígitos"; $("#errN").classList.add("show"); return; }
+    const p={
+      id:uid(), userId:DB.session, token:uid(), codigo:codigo(), status:"aguardando",
+      createdAt:new Date().toISOString(), signedAt:null, validadeDias:+fd.get("validadeDias"),
+      substabelecer:fd.get("sub")==="on", whatsapp:fd.get("whatsapp"), observacoes:fd.get("obs"), pin,
+      cliente:{nome:fd.get("nome"),cpf:fd.get("cpf"),rg:fd.get("rg"),orgaoRg:"",nacionalidade:"brasileiro(a)",
+        estadoCivil:"",profissao:"",telefone:fd.get("whatsapp"),cep:"",endereco:fd.get("endereco"),numero:"",
+        bairro:"",cidade:fd.get("cidade"),uf:fd.get("uf")},
+      veiculo:{placa:fd.get("placa"),renavam:fd.get("renavam"),chassi:fd.get("chassi"),marca:fd.get("marca"),
+        modelo:fd.get("modelo"),especie:"Automóvel",anoFab:fd.get("anoFab"),anoMod:"",cor:fd.get("cor"),combustivel:fd.get("combustivel")},
+      poderes, evidencias:{documento:null,biometria:null,assinatura:null,documentoTipo:"CNH"},
+      historico:[{em:new Date().toISOString(), fato:"Mandato criado"}]
+    };
+    DB.procuracoes.unshift(p); save(DB); go("detalhe",{id:p.id});
+  };
+}
+
+function viewConta(){
+  const u=me();
+  const f=(n,v)=>`<div class="field"><label>${n}</label><input name="${v}" value="${u[v]||""}"></div>`;
+  return `${topbar("conta")}<main class="wrap" style="max-width:760px">
+    <div class="page-head"><div><h1>Outorgado</h1><p>Esses dados saem na procuração. A senha é só sua.</p></div>
+      <button class="btn btn-line" id="sair">Sair</button></div>
+    ${u.mustChangePassword?`<div class="paper-card" style="border-color:#9c2b1f;margin-bottom:14px"><strong>Troque a senha agora.</strong> A senha padrão é conhecida e qualquer despachante entraria no seu escritório.</div>`:""}
+    <form class="paper-card" id="formS" style="margin-bottom:16px">
+      <h2 class="section-title">Senha de acesso</h2>
+      <p class="section-sub">Mínimo 8 caracteres, com letras e números. Depois de trocar, só você entra.</p>
+      <div class="grid-2">
+        <div class="field"><label>Senha atual</label><input name="atual" type="password" required autocomplete="current-password"></div>
+        <div class="field"><label>Nova senha</label><input name="nova" id="nova" type="password" required autocomplete="new-password"></div>
+        <div class="field"><label>Confirmar nova senha</label><input name="conf" type="password" required autocomplete="new-password"></div>
+        <div class="field"><label>Força</label><div class="meter"><span id="bar"></span></div><small class="meta" id="forca">—</small></div>
+      </div>
+      <div class="err" id="errS"></div>
+      <button class="btn btn-forest" type="submit">Alterar senha</button>
+    </form>
+    <form class="paper-card" id="formC">
+      <h2 class="section-title">Qualificação</h2>
+      <div class="grid-2">
+        ${f("Nome","nome")}${f("Empresa","empresa")}${f("CPF","cpf")}${f("RG","rg")}
+        ${f("Telefone","telefone")}${f("Registro","registro")}${f("Cidade","cidade")}${f("UF","uf")}
+        <div class="field full"><label>Endereço</label><input name="endereco" value="${u.endereco||""}"></div>
+      </div>
+      <button class="btn btn-forest" type="submit">Salvar dados</button>
+    </form>
+    <div class="paper-card" style="margin-top:16px">
+      <h2 class="section-title">Colocar no ar</h2>
+      <p class="section-sub">Para o cliente abrir o link no celular e tirar foto na hora, publique a pasta <b>outorga</b> num site https (Render, Railway ou similar). Cada despachante cria a própria conta. O passo a passo está no arquivo <b>COLOCAR-NO-AR.md</b>.</p>
+    </div>
+  </main>`;
+}
+function bindConta(){
+  $("#sair").onclick=()=>{ DB.session=null; save(DB); go("home"); };
+  const nova=$("#nova");
+  const paint=()=>{
+    const s=nova.value||"";
+    const score=(s.length>=8)+(/[A-Za-z]/.test(s))+(/\d/.test(s))+(/[^A-Za-z0-9]/.test(s))+(s.length>=12);
+    $("#bar").style.width=(score*20)+"%";
+    $("#bar").style.background=["#c44","#c44","#c80","#2d6a4f","#2d6a4f"][Math.max(0,score-1)];
+    $("#forca").textContent=strongPass(s)||(score>=3?"Senha aceitável":"");
+  };
+  nova.oninput=paint; paint();
+  $("#formS").onsubmit=e=>{
+    e.preventDefault();
+    const fd=new FormData(e.target);
+    const u=me();
+    if(fd.get("atual")!==u.password){ $("#errS").textContent="Senha atual incorreta"; $("#errS").classList.add("show"); return; }
+    if(fd.get("nova")!==fd.get("conf")){ $("#errS").textContent="A confirmação não confere"; $("#errS").classList.add("show"); return; }
+    const bad=strongPass(fd.get("nova"));
+    if(bad){ $("#errS").textContent=bad; $("#errS").classList.add("show"); return; }
+    if(fd.get("nova")===u.password){ $("#errS").textContent="A nova senha precisa ser diferente"; $("#errS").classList.add("show"); return; }
+    u.password=fd.get("nova");
+    u.mustChangePassword=false;
+    u.passwordChangedAt=new Date().toISOString();
+    save(DB);
+    toast("Senha alterada. Só você entra com ela agora.");
+    go("conta");
+  };
+  $("#formC").onsubmit=e=>{
+    e.preventDefault();
+    const fd=new FormData(e.target);
+    const u=me();
+    for(const [k,v] of fd.entries()) u[k]=v;
+    save(DB); toast("Dados salvos");
+  };
+}
+
+function viewDetalhe(){
+  const p=DB.procuracoes.find(x=>x.id===route.params.id);
+  if(!p) return `${topbar("painel")}<main class="wrap"><p>Não encontrada.</p></main>`;
+  const nomes=(p.poderes||[]).map(id=>PMAP[id]?.titulo).filter(Boolean);
+  const ev=p.evidencias||{};
+  const signed=p.status==="assinada";
+  const pending=p.status==="aguardando"||p.status==="em_andamento";
+  return `${topbar("painel")}<main class="wrap">
+    <div class="page-head"><div><h1>${p.cliente.nome}</h1><p>${p.codigo} · ${p.veiculo.placa} · ${badge(p.status)}</p></div>
+      <div class="no-print" style="display:flex;gap:8px;flex-wrap:wrap">
+        ${signed?`<button class="btn btn-forest" data-go="pdf" data-id="${p.id}">Ver / imprimir PDF</button>`:""}
+        <button class="btn btn-forest" type="button" id="copiar">Copiar link</button>
+        <button class="btn btn-ok" type="button" id="whats">Enviar no WhatsApp</button>
+        ${pending?`<button class="btn btn-line" data-assinar="${p.id}">Abrir como cliente</button>`:""}
+        <button class="btn btn-line" id="duplicar">Duplicar</button>
+        ${pending?`<button class="btn btn-line" id="cancelar">Cancelar</button>`:""}
+        <button class="btn btn-line" data-go="painel">Voltar</button>
+      </div>
+    </div>
+    <div class="paper-card" style="margin-bottom:16px">
+      <h2 class="section-title">Link para o cliente</h2>
+      <p class="section-sub">Copie e envie no WhatsApp. O PIN vai em outro recado.</p>
+      <div class="link-box">
+        <input id="linkCli" readonly value="${shareLink(p)}">
+        <button class="btn btn-forest btn-sm" type="button" id="copiar2">Copiar</button>
+      </div>
+      <p style="margin:8px 0 0"><button class="btn btn-line btn-sm" type="button" id="copiarMsg">Copiar mensagem pronta</button></p>
+      ${pending?`<p style="margin:16px 0 6px">PIN — mande separado</p><div class="pinbox">${p.pin||"----"}</div>`:""}
+    </div>
+    <div class="detail-grid">
+      <div class="paper-card">
+        <h2 class="section-title">Dados do mandato</h2>
+        <p class="section-sub">${signed?"Mandato concluído.":"Conferido pelo cliente no celular."}</p>
+        <div class="kv">
+          <b>Nome</b><span>${p.cliente.nome}</span>
+          <b>CPF</b><span>${p.cliente.cpf}</span>
+          <b>WhatsApp</b><span>${p.cliente.telefone||"—"}</span>
+          <b>Placa</b><span class="placa">${p.veiculo.placa}</span>
+          <b>RENAVAM</b><span>${p.veiculo.renavam||"—"}</span>
+          <b>Chassi</b><span>${p.veiculo.chassi||"—"}</span>
+          <b>Veículo</b><span>${[p.veiculo.marca,p.veiculo.modelo,p.veiculo.cor].filter(Boolean).join(" · ")}</span>
+          <b>Validade</b><span>${p.validadeDias} dias${p.status==="assinada"?" · resta "+diasRestantes(p)+" dias":""}</span>
+          <b>Assinada em</b><span>${fmt(p.signedAt)}</span>
+        </div>
+        <hr class="hr"><h2 class="section-title">Poderes</h2>
+        <ul>${nomes.map(n=>`<li>${n}</li>`).join("")}</ul>
+        ${p.observacoes?`<p class="meta">${p.observacoes}</p>`:""}
+        <hr class="hr"><h2 class="section-title">Linha do tempo</h2>
+        <ul class="timeline">${(p.historico||[]).map(h=>`<li class="done"><i></i><div>${h.fato}<div class="meta">${fmt(h.em)}</div></div></li>`).join("")}</ul>
+      </div>
+      <div class="paper-card">
+        <h2 class="section-title">Evidências</h2>
+        <p class="section-sub">Documento, face e assinatura do cliente.</p>
+        <div class="thumbs">
+          <figure>${ev.documento?`<img src="${ev.documento}" alt="">`:`<div style="height:140px;background:#efe6d6"></div>`}<figcaption>Documento ${ev.documentoTipo||""}</figcaption></figure>
+          <figure>${ev.biometria?`<img src="${ev.biometria}" alt="">`:`<div style="height:140px;background:#efe6d6"></div>`}<figcaption>Biometria</figcaption></figure>
+          <figure style="grid-column:1/-1">${ev.assinatura?`<img src="${ev.assinatura}" alt="" style="object-fit:contain;height:110px;background:#fff">`:`<div style="height:110px;background:#fff"></div>`}<figcaption>Assinatura</figcaption></figure>
+        </div>
+      </div>
+    </div>
+  </main>`;
+}
+function bindDetalhe(){
+  const p=DB.procuracoes.find(x=>x.id===route.params.id);
+  if(!p) return;
+  const copiar=async(txt)=>{
+    try{ await navigator.clipboard.writeText(txt); toast("Copiado"); }
+    catch(e){ const el=$("#linkCli"); if(el){ el.select(); document.execCommand("copy"); toast("Copiado"); } }
+  };
+  $("#copiar")&&($("#copiar").onclick=()=>copiar(shareLink(p)));
+  $("#copiar2")&&($("#copiar2").onclick=()=>copiar(shareLink(p)));
+  $("#copiarMsg")&&($("#copiarMsg").onclick=()=>copiar(waMsg(p)));
+  $("#whats")&&($("#whats").onclick=()=>{
+    const n=only(p.whatsapp||p.cliente.telefone||"");
+    const url = n ? `https://wa.me/55${n}?text=${encodeURIComponent(waMsg(p))}` : `https://wa.me/?text=${encodeURIComponent(waMsg(p))}`;
+    window.open(url,"_blank");
+  });
+  $("#cancelar")&&($("#cancelar").onclick=()=>{ p.status="cancelada"; pushHist(p,"Cancelado pelo despachante"); save(DB); toast("Cancelada"); go("detalhe",{id:p.id}); });
+  $("#duplicar")&&($("#duplicar").onclick=()=>{
+    const c=JSON.parse(JSON.stringify(p));
+    c.id=uid(); c.token=uid(); c.codigo=codigo(); c.pin=genPin();
+    c.status="aguardando"; c.signedAt=null; c.createdAt=new Date().toISOString();
+    c.evidencias={documento:null,biometria:null,assinatura:null,documentoTipo:"CNH"};
+    c.historico=[{em:c.createdAt, fato:"Duplicado a partir de "+p.codigo}];
+    DB.procuracoes.unshift(c); save(DB); toast("Cópia criada com PIN novo"); go("detalhe",{id:c.id});
+  });
+}
+
+function viewAssinar(){
+  const p=DB.procuracoes.find(x=>x.id===route.params.id);
+  if(!p) return `<div class="client-body"><div class="client-shell"><h1>Link inválido</h1></div></div>`;
+  if(p.status==="assinada") { clientDraft.unlocked=true; clientStep=5; }
+  if(p.status==="cancelada") return `<div class="client-body"><div class="client-shell" style="padding:24px"><h1>Link encerrado</h1><p class="lead">Cancelada pelo despachante.</p></div></div>`;
+  if(!clientDraft.unlocked){
+    return `<div class="client-body"><div class="client-shell">
+      <header class="client-top"><div class="mark"><div class="mark-seal">O</div><span>Outorga</span></div>
+        <div class="step-count">Identificação</div></header>
+      <main class="client-main">
+        <h1>Confirme que é você</h1>
+        <p class="lead">Por segurança o link sozinho não abre o mandato. Digite o CPF do outorgante e o PIN que o despachante te passou.</p>
+        <div class="field"><label style="color:#d4bc7d">CPF</label><input id="gateCpf" inputmode="numeric" placeholder="000.000.000-00" style="background:#142019;border:1px solid rgba(212,188,125,.3);color:#f6f0e6"></div>
+        <div class="field"><label style="color:#d4bc7d">PIN de 4 dígitos</label><input id="gatePin" inputmode="numeric" maxlength="4" placeholder="••••" style="background:#142019;border:1px solid rgba(212,188,125,.3);color:#f6f0e6;letter-spacing:.3em"></div>
+        <div class="err" id="errG"></div>
+        <div class="actions"><button class="btn btn-brass" id="unlock">Abrir procuração</button></div>
+      </main>
+    </div></div>`;
+  }
+  const bars=[0,1,2,3,4].map(i=>`<span class="${i<clientStep?"done":i===clientStep?"on":""}"></span>`).join("");
+  return `<div class="client-body"><div class="client-shell">
+    <header class="client-top"><div class="mark"><div class="mark-seal">O</div><span>Outorga</span></div>
+      <div class="step-count">${clientStep>=5?"Concluído":"Passo "+(clientStep+1)+" de 5"}</div></header>
+    <div class="progress-steps">${bars}</div>
+    <main class="client-main" id="cmain">${clientHTML(p)}</main>
+  </div></div>`;
+}
+function clientHTML(p){
+  const o=me() || DB.users.find(u=>u.id===p.userId) || {};
+  if(clientStep===0){
+    return `<h1>Confira antes de assinar</h1><p class="lead">Você está outorgando poderes ao despachante, só para este veículo.</p>
+      <div class="glass"><h3>Outorgante</h3><div class="fact"><span>Nome</span><strong>${p.cliente.nome}</strong></div><div class="fact"><span>CPF</span><strong>${p.cliente.cpf}</strong></div></div>
+      <div class="glass"><h3>Veículo</h3><div class="fact"><span>Placa</span><strong>${p.veiculo.placa}</strong></div><div class="fact"><span>Modelo</span><strong>${[p.veiculo.marca,p.veiculo.modelo].filter(Boolean).join(" ")||"—"}</strong></div></div>
+      <div class="glass"><h3>Despachante</h3><div class="fact"><span>Nome</span><strong>${o.nome||"—"}</strong></div><div class="fact"><span>Empresa</span><strong>${o.empresa||"—"}</strong></div></div>
+      <div class="glass"><h3>Poderes · ${p.validadeDias} dias</h3>${p.poderes.map(id=>`<div class="poder-chip">${PMAP[id]?.titulo||id}</div>`).join("")}</div>
+      <div class="actions"><button class="btn btn-brass" id="next">Está correto, continuar</button></div>`;
+  }
+  if(clientStep===1){
+    return `<h1>Documento com foto</h1><p class="lead">Tire a foto agora com a câmera ou escolha uma da galeria. A CNH/RG precisa ficar nítida.</p>
+      <div class="field"><label style="color:#d4bc7d">Tipo</label>
+        <select id="tipo" style="background:#142019;border-color:rgba(212,188,125,.3);color:#f6f0e6"><option>CNH</option><option>RG</option><option>CIN</option></select></div>
+      ${clientDraft.doc?`<img class="preview-img" src="${clientDraft.doc}">`:`<div class="drop" id="dropDoc">A câmera do celular abre ao tocar em Tirar foto agora</div>`}
+      <input type="file" id="fileDocCam" accept="image/*" capture="environment" hidden>
+      <input type="file" id="fileDocGal" accept="image/*" hidden>
+      <div class="actions">
+        <button class="btn btn-ghost" type="button" id="galDoc">Galeria</button>
+        <button class="btn btn-brass" type="button" id="camDoc">Tirar foto agora</button>
+      </div>
+      <div class="actions"><button class="btn btn-ghost" id="back">Voltar</button>
+        <button class="btn btn-brass" id="next" ${clientDraft.doc?"":"disabled"}>Usar esta</button></div>`;
+  }
+  if(clientStep===2){
+    return `<h1>Prova de vida</h1><p class="lead">Selfie de frente, na hora. Use a câmera frontal.</p>
+      ${clientDraft.face?`<img class="preview-img" src="${clientDraft.face}" style="transform:none">`:`<div class="drop">Toque em Tirar selfie agora e permita a câmera</div>`}
+      <input type="file" id="fileFaceCam" accept="image/*" capture="user" hidden>
+      <input type="file" id="fileFaceGal" accept="image/*" hidden>
+      <div class="actions">
+        <button class="btn btn-ghost" type="button" id="galFace">Galeria</button>
+        <button class="btn btn-brass" type="button" id="camFace">Tirar selfie agora</button>
+      </div>
+      <div class="actions"><button class="btn btn-ghost" id="back">Voltar</button>
+        <button class="btn btn-brass" id="next" ${clientDraft.face?"":"disabled"}>Confirmar rosto</button></div>`;
+  }
+  if(clientStep===3){
+    return `<h1>Assine como na CNH</h1><p class="lead">Use o mouse ou o dedo no campo branco.</p>
+      <div class="sign-wrap"><canvas id="pad"></canvas></div>
+      <div class="actions"><button class="btn btn-ghost" id="clear">Limpar</button>
+        <button class="btn btn-brass" id="next">Usar assinatura</button></div>
+      <div class="actions"><button class="btn btn-ghost" id="back">Voltar</button></div>`;
+  }
+  if(clientStep===4){
+    return `<h1>Fechar o mandato</h1><p class="lead">Ao confirmar, o despachante recebe e pode imprimir.</p>
+      <div class="glass"><div class="fact"><span>Outorgante</span><strong>${p.cliente.nome}</strong></div>
+      <div class="fact"><span>Veículo</span><strong>${p.veiculo.placa}</strong></div>
+      <div class="fact"><span>Poderes</span><strong>${p.poderes.length}</strong></div></div>
+      <label class="legal"><input type="checkbox" id="decl"><span>Declaro que sou o outorgante, conferi os poderes e o veículo, e assino de livre vontade.</span></label>
+      <div class="err" id="errC"></div>
+      <div class="actions"><button class="btn btn-ghost" id="back">Voltar</button>
+        <button class="btn btn-brass" id="fin">Assinar e enviar</button></div>`;
+  }
+  return `<div class="success-mark"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4"><path d="M5 12l5 5L20 7"/></svg></div>
+    <h1 style="text-align:center">Procuração assinada</h1>
+    <p class="lead" style="text-align:center">O despachante já pode imprimir. Código ${p.codigo}.</p>
+    <div class="actions"><button class="btn btn-brass" data-go="detalhe" data-id="${p.id}">Voltar ao painel</button></div>`;
+}
+function bindAssinar(){
+  const p=DB.procuracoes.find(x=>x.id===route.params.id);
+  if($("#unlock")){
+    $("#gateCpf").oninput=e=>e.target.value=maskCPF(e.target.value);
+    $("#gatePin").oninput=e=>e.target.value=only(e.target.value).slice(0,4);
+    $("#unlock").onclick=()=>{
+      const cpf=only($("#gateCpf").value);
+      const pin=$("#gatePin").value;
+      if(cpf!==only(p.cliente.cpf) || pin!==String(p.pin||"")){
+        $("#errG").textContent="CPF ou PIN não conferem"; $("#errG").classList.add("show"); return;
+      }
+      clientDraft.unlocked=true; clientStep=0; pushHist(p,"Cliente identificou-se com CPF e PIN"); save(DB); render();
+    };
+    return;
+  }
+  const next=()=>{ clientStep++; render(); };
+  const back=()=>{ clientStep=Math.max(0,clientStep-1); render(); };
+  $("#next")&&($("#next").onclick=()=>{
+    if(clientStep===1){ p.evidencias.documento=clientDraft.doc; p.evidencias.documentoTipo=$("#tipo")?.value||"CNH"; p.status="em_andamento"; pushHist(p,"Documento anexado"); save(DB); }
+    if(clientStep===2){ p.evidencias.biometria=clientDraft.face; p.evidencias.liveness="Selfie de prova de vida"; pushHist(p,"Biometria capturada"); save(DB); }
+    if(clientStep===3){
+      const pad=window._pad;
+      if(!pad||pad.empty){ toast("Assine no campo branco"); return; }
+      p.evidencias.assinatura=pad.toDataURL(); clientDraft.sign=p.evidencias.assinatura; pushHist(p,"Assinatura capturada"); save(DB);
+    }
+    next();
+  });
+  $("#back")&&($("#back").onclick=back);
+  const readFile=(input,key)=>{
+    if(!input) return;
+    input.onchange=()=>{
+      const f=input.files?.[0]; if(!f) return;
+      const r=new FileReader();
+      r.onload=()=>{ clientDraft[key]=r.result; render(); };
+      r.readAsDataURL(f);
+    };
+  };
+  readFile($("#fileDocCam"),"doc");
+  readFile($("#fileDocGal"),"doc");
+  readFile($("#fileFaceCam"),"face");
+  readFile($("#fileFaceGal"),"face");
+  $("#camDoc")&&($("#camDoc").onclick=()=>$("#fileDocCam").click());
+  $("#galDoc")&&($("#galDoc").onclick=()=>$("#fileDocGal").click());
+  $("#camFace")&&($("#camFace").onclick=()=>$("#fileFaceCam").click());
+  $("#galFace")&&($("#galFace").onclick=()=>$("#fileFaceGal").click());
+  if($("#pad")) window._pad=SignaturePad($("#pad"));
+  $("#clear")&&($("#clear").onclick=()=>window._pad&&window._pad.clear());
+  $("#fin")&&($("#fin").onclick=()=>{
+    if(!$("#decl").checked){ $("#errC").textContent="Marque a declaração"; $("#errC").classList.add("show"); return; }
+    p.status="assinada"; p.signedAt=new Date().toISOString(); pushHist(p,"Assinado pelo cliente"); save(DB); clientStep=5; render();
+  });
+  $("#voltarFicha")&&($("#voltarFicha").onclick=()=>go("detalhe",{id:p.id}));
+}
+
+function SignaturePad(canvas){
+  const dpr=Math.max(1,window.devicePixelRatio||1);
+  const rect=canvas.getBoundingClientRect();
+  canvas.width=rect.width*dpr; canvas.height=200*dpr;
+  const ctx=canvas.getContext("2d"); ctx.scale(dpr,dpr);
+  ctx.lineWidth=2.2; ctx.lineCap="round"; ctx.strokeStyle="#1c1410";
+  ctx.fillStyle="#fff"; ctx.fillRect(0,0,rect.width,200);
+  let drawing=false, empty=true;
+  const pos=e=>{ const r=canvas.getBoundingClientRect(); const t=e.touches?e.touches[0]:e; return {x:t.clientX-r.left,y:t.clientY-r.top}; };
+  const start=e=>{ e.preventDefault(); drawing=true; const p=pos(e); ctx.beginPath(); ctx.moveTo(p.x,p.y); };
+  const move=e=>{ if(!drawing) return; e.preventDefault(); const p=pos(e); ctx.lineTo(p.x,p.y); ctx.stroke(); empty=false; };
+  canvas.addEventListener("pointerdown",start); canvas.addEventListener("pointermove",move); window.addEventListener("pointerup",()=>drawing=false);
+  canvas.addEventListener("touchstart",start,{passive:false}); canvas.addEventListener("touchmove",move,{passive:false});
+  return { get empty(){return empty;}, clear(){ ctx.fillStyle="#fff"; ctx.fillRect(0,0,rect.width,200); empty=true; }, toDataURL:()=>canvas.toDataURL("image/png") };
+}
+
+function viewPdf(){
+  const p=DB.procuracoes.find(x=>x.id===route.params.id);
+  const u=DB.users.find(x=>x.id===p.userId);
+  const poderes=(p.poderes||[]).map((id,i)=>`<p><b>${i+1}. ${PMAP[id]?.titulo}</b><br>${PMAP[id]?.texto||""}</p>`).join("");
+  const ev=p.evidencias||{};
+  return `${topbar("painel")}<main class="wrap" style="max-width:800px">
+    <div class="page-head no-print"><div><h1>Impressão</h1><p>Use o botão do navegador ou Ctrl+P para salvar em PDF.</p></div>
+      <div style="display:flex;gap:8px"><button class="btn btn-forest" onclick="window.print()">Imprimir / salvar PDF</button>
+      <button class="btn btn-line" data-go="detalhe" data-id="${p.id}">Voltar</button></div></div>
+    <article class="doc-sheet">
+      <div style="background:#16261c;color:#d4bc7d;padding:12px 16px;margin:-28px -26px 18px;display:flex;justify-content:space-between">
+        <strong style="letter-spacing:.2em">OUTORGA</strong><span>PROTOCOLO ${p.codigo}</span></div>
+      <h2>INSTRUMENTO PARTICULAR DE PROCURAÇÃO</h2>
+      <p class="sub">com poderes específicos para atos de trânsito</p>
+      <p>Pelo presente instrumento, <b>${p.cliente.nome}</b>, ${p.cliente.nacionalidade||""}, inscrito(a) no CPF ${p.cliente.cpf}${p.cliente.rg?", RG "+p.cliente.rg:""}${p.cliente.cidade?", residente em "+p.cliente.cidade+"/"+p.cliente.uf:""}, nomeia e constitui seu bastante procurador <b>${u.nome}</b>${u.empresa?", atuando em "+u.empresa:""}, CPF ${u.cpf||"—"}, para o veículo abaixo.</p>
+      <p><b>Veículo:</b> placa ${p.veiculo.placa}, ${[p.veiculo.marca,p.veiculo.modelo].filter(Boolean).join(" ")}, RENAVAM ${p.veiculo.renavam||"—"}, chassi ${p.veiculo.chassi||"—"}, ${p.veiculo.cor||""} ${p.veiculo.combustivel||""}.</p>
+      <p><b>Poderes outorgados:</b></p>${poderes}
+      <p>${p.substabelecer?"Fica autorizado o substabelecimento.":"Fica vedado o substabelecimento."} Validade: ${p.validadeDias} dias a contar da assinatura (${fmt(p.signedAt)}).</p>
+      <p>O outorgante declara que conferiu os dados, submeteu-se a captura de documento com foto e prova de vida, e apôs assinatura eletrônica avançada (Lei 14.063/2020 e MP 2.200-2/2001).</p>
+      <p>${p.cliente.cidade||u.cidade||"Juazeiro do Norte"}/${p.cliente.uf||u.uf||"CE"}, ${fmt(p.signedAt)}.</p>
+      ${ev.assinatura?`<img src="${ev.assinatura}" alt="Assinatura" style="height:70px;object-fit:contain">`:""}
+      <p style="text-align:center;margin-top:8px"><b>${p.cliente.nome}</b><br>CPF ${p.cliente.cpf}</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:18px">
+        ${ev.documento?`<div><small>DOCUMENTO</small><img src="${ev.documento}" style="height:120px;object-fit:cover;width:100%"></div>`:""}
+        ${ev.biometria?`<div><small>BIOMETRIA</small><img src="${ev.biometria}" style="height:120px;object-fit:cover;width:100%"></div>`:""}
+      </div>
+    </article>
+  </main>`;
+}
+
+function render(){
+  if(["painel","nova","conta","detalhe","pdf"].includes(route.name) && !me()) route={name:"home",params:{}};
+  const map={home:viewHome,painel:viewPainel,nova:viewNova,conta:viewConta,detalhe:viewDetalhe,assinar:viewAssinar,pdf:viewPdf};
+  $("#app").innerHTML=(map[route.name]||viewHome)();
+  bindClicks();
+  const binds={home:bindHome,painel:bindPainel,nova:bindNova,conta:bindConta,detalhe:bindDetalhe,assinar:bindAssinar};
+  binds[route.name]&&binds[route.name]();
+}
+function bindClicks(){
+  $$("[data-go]").forEach(el=>el.onclick=e=>{ e.preventDefault(); go(el.dataset.go, el.dataset.id?{id:el.dataset.id}:{}); });
+  $$("[data-open]").forEach(el=>el.onclick=()=>go("detalhe",{id:el.dataset.open}));
+  $$("[data-assinar]").forEach(el=>el.onclick=()=>go("assinar",{id:el.dataset.assinar}));
+}
+function doLogin(email, password){
+  const u=(DB.users||[]).find(x=>x.email===String(email||"").toLowerCase() && x.password===password);
+  if(!u) return false;
+  DB.session=u.id; save(DB);
+  go(u.mustChangePassword?"conta":"painel");
+  return true;
+}
+const boot=document.getElementById("bootLogin");
+if(boot){
+  boot.addEventListener("submit", function(e){
+    e.preventDefault();
+    const fd=new FormData(boot);
+    if(!doLogin(fd.get("email"), fd.get("password"))) alert("E-mail ou senha inválidos");
+  });
+}
+try{
+  const h=(location.hash||"").replace(/^#/,"");
+  const m=h.match(/^assinar\/(.+)$/);
+  if(m) route={name:"assinar",params:{id:m[1]}};
+  else if(DB && DB.session) route={name:"painel",params:{}};
+  render();
+}catch(err){
+  console.error(err);
+}
+</script>
+</body>
+</html>
+ame:"painel",params:{}};
+  render();
+}catch(err){
+  console.error(err);
+}
+</script>
+</body>
+</html>
