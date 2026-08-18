@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Enviar os arquivos certos no GitHub</title>
+<style>
+  body{margin:0;font-family:Segoe UI,system-ui,sans-serif;background:#f4efe4;color:#1c1410;line-height:1.55}
+  .wrap{max-width:740px;margin:0 auto;padding:28px 18px 80px}
+  h1{font-family:Georgia,serif;font-size:34px;line-height:1.1}
+  .warn{background:#f8e4e1;border-radius:14px;padding:14px 16px;margin:16px 0}
+  .ok{background:#dceee4;border-radius:14px;padding:14px 16px;margin:16px 0}
+  .step{background:#fffbf4;border:1px solid #d5c9b4;border-radius:16px;padding:16px;margin:14px 0}
+  .box{background:#16261c;color:#d4bc7d;font-family:ui-monospace,Menlo,monospace;padding:12px;border-radius:10px;font-size:13px}
+  .n{display:inline-block;background:#16261c;color:#fff;border-radius:99px;padding:2px 10px;font-weight:700;font-size:13px}
+  a{color:#2c4a38}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Você enviou o arquivo errado</h1>
+  <div class="warn">
+    No GitHub <b>madasdorescavalcante-cloud/outorga</b> só está o
+    <b>ABRA-AQUI-OUTORGA.html</b>.<br>
+    O Render precisa do sistema da pasta <b>outorga</b> (<code>package.json</code> + <code>server.js</code> + pasta <code>public</code>).
+  </div>
+
+  <div class="step">
+    <span class="n">1</span> Abra este link:<br>
+    <a href="https://github.com/madasdorescavalcante-cloud/outorga/upload/main" target="_blank" rel="noopener">github.com/madasdorescavalcante-cloud/outorga/upload/main</a>
+  </div>
+
+  <div class="step">
+    <span class="n">2</span> Arraste para a página <b>o conteúdo de dentro da pasta outorga</b>, não o HTML da raiz e não a pasta “pai”.
+    <p>Tem que ir isto:</p>
+    <div class="box">package.json<br>package-lock.json<br>server.js<br>store.js<br>pdf.js<br>poderes.js<br>Procfile<br>render.yaml<br>pasta public/ &nbsp;← inteira (html, css, js, img)</div>
+    <p>Pode arrastar a pasta <code>public</code> inteira. O GitHub aceita.</p>
+  </div>
+
+  <div class="step">
+    <span class="n">3</span> Embaixo da página, clique em <b>Commit changes</b>.
+  </div>
+
+  <div class="step">
+    <span class="n">4</span> Confira: abra
+    <a href="https://github.com/madasdorescavalcante-cloud/outorga" target="_blank" rel="noopener">o repositório</a>
+    e veja se <b>package.json</b> e <b>server.js</b> aparecem na primeira tela, soltos.
+  </div>
+
+  <div class="step">
+    <span class="n">5</span> No Render, no serviço que já existe:<br>
+    <b>Manual Deploy</b> → <b>Deploy latest commit</b>.<br>
+    Não crie outro site. Espere ficar <b>Live</b>.
+  </div>
+
+  <div class="ok">
+    Quando o GitHub mostrar o <code>package.json</code> na raiz, o erro 254 some.
+  </div>
+</div>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f"}' crossorigin="anonymous"></script>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a2d2672baa7fbcdb',t:'MTc4NzA3MTY3NA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
